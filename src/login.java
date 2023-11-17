@@ -18,6 +18,7 @@ public class login extends JFrame{
     ResultSet resultado;
 
     public login() {
+        setLocationRelativeTo(null);
         botonIngresarUser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -100,7 +101,7 @@ public class login extends JFrame{
                 Usuarios usuario1 = new Usuarios();
                 usuario1.setLocationRelativeTo(null);
                 usuario1.setContentPane(new Usuarios().panel);
-                usuario1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                usuario1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 usuario1.setVisible(true);
                 usuario1.pack();
                 this.dispose();
@@ -123,13 +124,13 @@ public class login extends JFrame{
             resultado = traer.executeQuery("SELECT usuario, contraseña FROM administradores WHERE usuario ='" + usuario + "' AND contraseña ='" + contraseña + "'");
 
             if (resultado.next()) {
-                Usuarios usuario1 = new Usuarios();
-                usuario1.setLocationRelativeTo(null);
-                usuario1.setContentPane(new Usuarios().panel);
-                usuario1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                usuario1.setVisible(true);
-                usuario1.pack();
-                this.dispose();
+                inicioAdmin ingresar1 = new inicioAdmin();
+                ingresar1.setLocationRelativeTo(null);
+                ingresar1.setContentPane(new inicioAdmin().panelAdmin);
+                ingresar1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                ingresar1.setVisible(true);
+                ingresar1.pack();
+
                 JOptionPane.showMessageDialog(null, "Acceso permitido");
             } else {
                 JOptionPane.showMessageDialog(null, "Error de acceso: admin no registrado");

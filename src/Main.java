@@ -18,7 +18,7 @@ public class Main {
             ingresar ingresar1 = new ingresar();
             ingresar1.setLocationRelativeTo(null);
             ingresar1.setContentPane(new ingresar().panelIngresar);
-            ingresar1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            ingresar1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             ingresar1.setVisible(true);
             ingresar1.pack();
         });

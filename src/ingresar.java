@@ -23,7 +23,6 @@ public class ingresar extends JFrame{
                 System.out.println("Ventana cerrándose");
             }
         });
-        setLocationRelativeTo(null);
 
         botonValidarUser.addActionListener(new ActionListener() {
             @Override
@@ -58,15 +57,12 @@ public class ingresar extends JFrame{
             traer = conexion.createStatement();
             resultado = traer.executeQuery("SELECT usuario, contraseña FROM Usuarios WHERE usuario ='" + usuario + "' AND contraseña ='" + contraseña + "'");
             if (resultado.next()) {
+                this.dispose();
                 Usuarios usuario1 = new Usuarios();
-                usuario1.setLocationRelativeTo(null);
                 usuario1.setContentPane(new Usuarios().panel);
-                usuario1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                usuario1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 usuario1.setVisible(true);
                 usuario1.pack();
-                this.dispose();
-                System.out.println("dispose() llamado"); // Mensaje de depuración
-
                 JOptionPane.showMessageDialog(null, "Acceso permitido");
             } else {
                 JOptionPane.showMessageDialog(null, "Error de acceso: usuario no registrado");
@@ -119,7 +115,7 @@ public class ingresar extends JFrame{
                 inicioAdmin ingresar1 = new inicioAdmin();
                 ingresar1.setLocationRelativeTo(null);
                 ingresar1.setContentPane(new inicioAdmin().panelAdmin);
-                ingresar1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                ingresar1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 ingresar1.setVisible(true);
                 ingresar1.pack();
 

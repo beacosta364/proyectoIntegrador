@@ -15,7 +15,7 @@ public class inicioAdmin extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 Usuarios usuario1 = new Usuarios();
                 usuario1.setContentPane(new Usuarios().panel);
-                usuario1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                usuario1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 usuario1.setVisible(true);
                 usuario1.pack();
             }
@@ -25,7 +25,7 @@ public class inicioAdmin extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 productos producto1 = new productos();
                 producto1.setContentPane(new productos().productoPanel);
-                producto1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                producto1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 producto1.setVisible(true);
                 producto1.pack();
             }
@@ -35,7 +35,7 @@ public class inicioAdmin extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 login login1 = new login();
                 login1.setContentPane(new login().panellog);
-                login1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                login1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 login1.setVisible(true);
                 login1.pack();
             }
