@@ -9,7 +9,8 @@ import javax.swing.*;
         ingresar1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ingresar1.setVisible(true);
         ingresar1.pack();
-
+//Algoritmo de busqueda
+//concatenar QUERY
     }
 }*/
 public class Main {
@@ -24,7 +25,7 @@ public class Main {
         });
     }
 }
-    
+
 
 
 
