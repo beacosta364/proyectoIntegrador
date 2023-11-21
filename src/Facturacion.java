@@ -32,6 +32,7 @@ public class Facturacion extends JFrame{
     private JPanel panelFacturacion;
     private JList list1;
     private JButton facturarButton;
+    private JButton calcularButton;
     Connection conexion;
     PreparedStatement preparar;
     Statement traer;
@@ -175,13 +176,13 @@ public class Facturacion extends JFrame{
                    if (row >=0){
                        Object nombreProducto = source.getValueAt(row, colNombre);
                        Object precio = source.getValueAt(row, colPrecio);
-                       subtotal += Double.parseDouble(precio.toString());
                        if (nombreProducto.equals(nombreCliente.getText())){
                            listModel.add(0,"Nombre Cliente: "+nombreCliente.getText());
                            listModel.add(1, "-----------------------------------");
                        }else{
                            String textoConcatenado = nombreProducto.toString() + "- $" + precio.toString();
                            listModel.addElement(textoConcatenado);
+                           subtotal += Double.parseDouble(precio.toString());
                        }
                        /*if(row == source.getRowCount()-1){
                            listModel.addElement("Subtotal: $" + subtotal);
@@ -213,24 +214,30 @@ public class Facturacion extends JFrame{
                 }
             }
         });
-    }
-    /*public void generarPDF() throws DocumentException, IOException {
-        Document document =new Document();
-        try {
-            PdfWriter.getInstance(document, new FileOutputStream("factura.pdf"));
-            document.open();
-            for (int i =0; i> listModel.size();i++){
-                Paragraph paragraph = new Paragraph(listModel.getElementAt(i));
-                document.add(paragraph);
+        calcularButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calcularTotales();
             }
-            document.close();
-            JOptionPane.showMessageDialog(null,"Factura generada correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
-        }
-       catch (FileNotFoundException e){
-           e.printStackTrace();
-           JOptionPane.showMessageDialog(null, "Error al generar el PDF", "Error", JOptionPane.ERROR_MESSAGE);
-       }
-    }*/
+        });
+    }
+    private void calcularTotales() {
+        // Calcular el INC (8% del subtotal)
+        double inc = subtotal * 0.08;
+
+        // Calcular la propina (10% del subtotal)
+        double propina = subtotal * 0.10;
+
+        // Calcular el total (subtotal + INC + propina)
+        double total = subtotal + inc + propina;
+        // Agregar los nuevos elementos al listModel
+        listModel.addElement("Subtotal: $" + subtotal);
+        listModel.addElement("INC (8%): $" + inc);
+        listModel.addElement("Propina (10%): $" + propina);
+        listModel.addElement("----------------------------");
+        listModel.addElement("Total: $" + total);
+    }
+
 
     private void generarPDF() throws DocumentException, IOException {
         Document document = new Document();
