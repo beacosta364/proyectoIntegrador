@@ -1,9 +1,17 @@
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.*;
 
 public class Facturacion extends JFrame{
@@ -23,6 +31,7 @@ public class Facturacion extends JFrame{
     private JButton porcionesButton;
     private JPanel panelFacturacion;
     private JList list1;
+    private JButton facturarButton;
     Connection conexion;
     PreparedStatement preparar;
     Statement traer;
@@ -32,6 +41,7 @@ public class Facturacion extends JFrame{
     String[] registros = new String[100];
     DefaultTableModel modeloTabla = new DefaultTableModel(null, campos);
     DefaultListModel<String> listModel = new DefaultListModel<>();
+
 
     public Facturacion() {
         botonEntradas.addActionListener(new ActionListener() {
@@ -173,10 +183,10 @@ public class Facturacion extends JFrame{
                            String textoConcatenado = nombreProducto.toString() + "- $" + precio.toString();
                            listModel.addElement(textoConcatenado);
                        }
-                       if(row == source.getRowCount()-1){
+                       /*if(row == source.getRowCount()-1){
                            listModel.addElement("Subtotal: $" + subtotal);
                            listModel.addElement("----------------------------");
-                       }
+                       }*/
 
                    }
                 }
@@ -191,6 +201,56 @@ public class Facturacion extends JFrame{
                 nombreCliente.setText("");
             }
         });
+        facturarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    generarPDF();
+                } catch (DocumentException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+    /*public void generarPDF() throws DocumentException, IOException {
+        Document document =new Document();
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream("factura.pdf"));
+            document.open();
+            for (int i =0; i> listModel.size();i++){
+                Paragraph paragraph = new Paragraph(listModel.getElementAt(i));
+                document.add(paragraph);
+            }
+            document.close();
+            JOptionPane.showMessageDialog(null,"Factura generada correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+       catch (FileNotFoundException e){
+           e.printStackTrace();
+           JOptionPane.showMessageDialog(null, "Error al generar el PDF", "Error", JOptionPane.ERROR_MESSAGE);
+       }
+    }*/
+
+    private void generarPDF() throws DocumentException, IOException {
+        Document document = new Document();
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream("factura.pdf"));
+            document.open();
+            for (int i = 0; i < listModel.size(); i++) {
+                Paragraph paragraph = new Paragraph(listModel.getElementAt(i));
+                document.add(paragraph);
+            }
+            JOptionPane.showMessageDialog(null, "Factura generada correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el PDF", "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // Cerrar el documento fuera del bloque try-catch
+            if (document != null && document.isOpen()) {
+                document.close();
+            }
+        }
     }
 
     public void conectar(){
@@ -201,6 +261,7 @@ public class Facturacion extends JFrame{
 
         }
     }
+
 
     public void consultarEntradas() throws SQLException {
         conectar();
