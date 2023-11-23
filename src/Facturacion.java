@@ -187,8 +187,13 @@ public class Facturacion extends JFrame{
                             subtotal += Double.parseDouble(precio.toString());
 
                             //insertar en la base de datos venta
-                            try {
+                            /*try {
                                 insertarRegistroVenta(nombreProducto.toString(), Double.parseDouble(precio.toString()));
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }*/
+                            try {
+                                insertarRegistroVenta(nombreProducto.toString(), Double.parseDouble(precio.toString()), obtenerDescripcionProducto(nombreProducto.toString()));
                             } catch (SQLException ex) {
                                 throw new RuntimeException(ex);
                             }
@@ -246,14 +251,14 @@ public class Facturacion extends JFrame{
                         // Eliminar el elemento de la JList
                         listModel.remove(selectedIndex);
 
-                        // Llamada para eliminar el registro de la base de datos
+                        // eliminar registro de la base de datos
                         try {
                             eliminarRegistroVenta(nombreProducto);
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "No puedes eliminar el nombre del cliente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "No puedes eliminar el elemento.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecciona un elemento para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -576,12 +581,26 @@ public class Facturacion extends JFrame{
             }
         }
     }
-    public void insertarRegistroVenta(String nombreProducto, double precio) throws SQLException {
+    /*public void insertarRegistroVenta(String nombreProducto, double precio) throws SQLException {
         conectar();
         try {
             preparar = conexion.prepareStatement("INSERT INTO venta (nombre, precio, fecha) VALUES (?, ?, NOW())");
             preparar.setString(1, nombreProducto);
             preparar.setDouble(2, precio);
+            preparar.executeUpdate();
+        } finally {
+            if (preparar != null) {
+                preparar.close();
+            }
+        }
+    }*/
+    public void insertarRegistroVenta(String nombreProducto, double precio, String descripcion) throws SQLException {
+        conectar();
+        try {
+            preparar = conexion.prepareStatement("INSERT INTO venta (nombre, precio, fecha, descripcion) VALUES (?, ?, NOW(), ?)");
+            preparar.setString(1, nombreProducto);
+            preparar.setDouble(2, precio);
+            preparar.setString(3, descripcion);
             preparar.executeUpdate();
         } finally {
             if (preparar != null) {
@@ -613,7 +632,26 @@ public class Facturacion extends JFrame{
             }
         }
     }
-
+    private String obtenerDescripcionProducto(String nombreProducto) throws SQLException {
+        conectar();
+        String descripcion = "";
+        try {
+            preparar = conexion.prepareStatement("SELECT descripcion FROM productos WHERE nombre = ?");
+            preparar.setString(1, nombreProducto);
+            resultado = preparar.executeQuery();
+            if (resultado.next()) {
+                descripcion = resultado.getString("descripcion");
+            }
+        } finally {
+            if (resultado != null) {
+                resultado.close();
+            }
+            if (preparar != null) {
+                preparar.close();
+            }
+        }
+        return descripcion;
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Facturacion ingresar1 = new Facturacion();
