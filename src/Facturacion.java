@@ -29,10 +29,11 @@ public class Facturacion extends JFrame{
     private JButton hamburguesasButton;
     private JButton pastasButton;
     private JButton porcionesButton;
-    private JPanel panelFacturacion;
-    private JList list1;
+    JPanel panelFacturacion;
+    JList list1;
     private JButton facturarButton;
     private JButton calcularButton;
+    private JButton eliminarButton;
     Connection conexion;
     PreparedStatement preparar;
     Statement traer;
@@ -165,35 +166,38 @@ public class Facturacion extends JFrame{
                 }
             }
         });
+
         tablaProductos.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount()==1){
-                   JTable source = (JTable) e.getSource();
-                   int row = source.rowAtPoint(e.getPoint());
+                if (e.getClickCount() == 1) {
+                    JTable source = (JTable) e.getSource();
+                    int row = source.rowAtPoint(e.getPoint());
                     int colNombre = 0;
                     int colPrecio = 1;
-                   if (row >=0){
-                       Object nombreProducto = source.getValueAt(row, colNombre);
-                       Object precio = source.getValueAt(row, colPrecio);
-                       if (nombreProducto.equals(nombreCliente.getText())){
-                           listModel.add(0,"Nombre Cliente: "+nombreCliente.getText());
-                           listModel.add(1, "-----------------------------------");
-                       }else{
-                           String textoConcatenado = nombreProducto.toString() + "- $" + precio.toString();
-                           listModel.addElement(textoConcatenado);
-                           subtotal += Double.parseDouble(precio.toString());
-                       }
-                       /*if(row == source.getRowCount()-1){
-                           listModel.addElement("Subtotal: $" + subtotal);
-                           listModel.addElement("----------------------------");
-                       }*/
+                    if (row >= 0) {
+                        Object nombreProducto = source.getValueAt(row, colNombre);
+                        Object precio = source.getValueAt(row, colPrecio);
+                        if (nombreProducto.equals(nombreCliente.getText())) {
+                            listModel.add(0, "Nombre Cliente: " + nombreCliente.getText());
+                            listModel.add(1, "-----------------------------------");
+                        } else {
+                            String textoConcatenado = nombreProducto.toString() + "- $" + precio.toString();
+                            listModel.addElement(textoConcatenado);
+                            subtotal += Double.parseDouble(precio.toString());
 
-                   }
+                            //insertar en la base de datos venta
+                            try {
+                                insertarRegistroVenta(nombreProducto.toString(), Double.parseDouble(precio.toString()));
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                    }
                 }
-
             }
         });
+
         nombreCliente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -220,6 +224,44 @@ public class Facturacion extends JFrame{
                 calcularTotales();
             }
         });
+        eliminarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Obtener el índice seleccionado en la JList
+                int selectedIndex = list1.getSelectedIndex();
+
+                if (selectedIndex != -1) {
+                    // Obtener el elemento seleccionado en la JList
+                    String elementoSeleccionado = listModel.getElementAt(selectedIndex);
+
+                    // Verificar si el elemento pertenece a la JTable o es un nombre de cliente
+                    if (!elementoSeleccionado.startsWith("Nombre Cliente")) {
+                        // Extraer el nombre del producto del elemento
+                        String nombreProducto = elementoSeleccionado.split("-")[0].trim();
+
+                        // Restar el precio del producto eliminado al subtotal
+                        double precio = Double.parseDouble(elementoSeleccionado.split("-")[1].replace("$", "").trim());
+                        subtotal -= precio;
+
+                        // Eliminar el elemento de la JList
+                        listModel.remove(selectedIndex);
+
+                        // Llamada para eliminar el registro de la base de datos
+                        try {
+                            eliminarRegistroVenta(nombreProducto);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No puedes eliminar el nombre del cliente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Selecciona un elemento para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+
+
     }
     private void calcularTotales() {
         // Calcular el INC (8% del subtotal)
@@ -534,6 +576,44 @@ public class Facturacion extends JFrame{
             }
         }
     }
+    public void insertarRegistroVenta(String nombreProducto, double precio) throws SQLException {
+        conectar();
+        try {
+            preparar = conexion.prepareStatement("INSERT INTO venta (nombre, precio, fecha) VALUES (?, ?, NOW())");
+            preparar.setString(1, nombreProducto);
+            preparar.setDouble(2, precio);
+            preparar.executeUpdate();
+        } finally {
+            if (preparar != null) {
+                preparar.close();
+            }
+        }
+    }
+    /*private void eliminarRegistroVenta(String nombreProducto) throws SQLException {
+        conectar();
+        try {
+            preparar = conexion.prepareStatement("DELETE FROM venta WHERE nombre = ?");
+            preparar.setString(1, nombreProducto);
+            preparar.executeUpdate();
+        } finally {
+            if (preparar != null) {
+                preparar.close();
+            }
+        }
+    }*/
+    private void eliminarRegistroVenta(String nombreProducto) throws SQLException {
+        conectar();
+        try {
+            preparar = conexion.prepareStatement("DELETE FROM venta WHERE nombre = ? ORDER BY id DESC LIMIT 1");
+            preparar.setString(1, nombreProducto);
+            preparar.executeUpdate();
+        } finally {
+            if (preparar != null) {
+                preparar.close();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Facturacion ingresar1 = new Facturacion();
