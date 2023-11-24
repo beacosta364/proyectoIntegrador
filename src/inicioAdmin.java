@@ -53,6 +53,16 @@ public class inicioAdmin extends JFrame{
                 ingresar1.pack();
             }
         });
+        reportesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reportes reporte = new reportes();
+                reporte.setContentPane(new reportes().panelReportes);
+                reporte.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                reporte.setVisible(true);
+                reporte.pack();
+            }
+        });
     }
     /*public static void main(String[] args) {
         inicioAdmin ingresar1 = new inicioAdmin();

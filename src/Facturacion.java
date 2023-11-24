@@ -594,6 +594,27 @@ public class Facturacion extends JFrame{
             }
         }
     }*/
+
+    public void insertarRegistroVenta(String nombreProducto, double precio, String descripcion) throws SQLException {
+        conectar();
+        try {
+            preparar = conexion.prepareStatement("INSERT INTO venta (nombre, precio, fecha, descripcion) VALUES (?, ?, NOW(), ?)");
+            preparar.setString(1, nombreProducto);
+            preparar.setDouble(2, precio);
+            preparar.setString(3, descripcion);
+            preparar.executeUpdate();
+
+            // Actualizar el stock después de la venta
+            actualizarStockVenta(nombreProducto, 1);
+        } finally {
+            if (preparar != null) {
+                preparar.close();
+            }
+        }
+    }
+
+
+    /*        Este es el actual
     public void insertarRegistroVenta(String nombreProducto, double precio, String descripcion) throws SQLException {
         conectar();
         try {
@@ -607,7 +628,7 @@ public class Facturacion extends JFrame{
                 preparar.close();
             }
         }
-    }
+    }*/
     /*private void eliminarRegistroVenta(String nombreProducto) throws SQLException {
         conectar();
         try {
@@ -622,10 +643,22 @@ public class Facturacion extends JFrame{
     }*/
     private void eliminarRegistroVenta(String nombreProducto) throws SQLException {
         conectar();
+        /*try {
+            preparar = conexion.prepareStatement("DELETE FROM venta WHERE nombre = ? ORDER BY id DESC LIMIT 1");
+            preparar.setString(1, nombreProducto);
+            preparar.executeUpdate();
+        } finally {
+            if (preparar != null) {
+                preparar.close();
+            }
+        }*/
         try {
             preparar = conexion.prepareStatement("DELETE FROM venta WHERE nombre = ? ORDER BY id DESC LIMIT 1");
             preparar.setString(1, nombreProducto);
             preparar.executeUpdate();
+
+            // Restaurar la cantidad al eliminar la venta
+            restaurarStockVenta(nombreProducto, 1);
         } finally {
             if (preparar != null) {
                 preparar.close();
@@ -651,6 +684,33 @@ public class Facturacion extends JFrame{
             }
         }
         return descripcion;
+    }
+
+    private void actualizarStockVenta(String nombreProducto, double cantidad) throws SQLException {
+        conectar();
+        try {
+            preparar = conexion.prepareStatement("UPDATE stockProductos SET cantidad = cantidad - ? WHERE nombre = ?");
+            preparar.setDouble(1, cantidad);
+            preparar.setString(2, nombreProducto);
+            preparar.executeUpdate();
+        } finally {
+            if (preparar != null) {
+                preparar.close();
+            }
+        }
+    }
+    private void restaurarStockVenta(String nombreProducto, double cantidad) throws SQLException {
+        conectar();
+        try {
+            preparar = conexion.prepareStatement("UPDATE stockProductos SET cantidad = cantidad + ? WHERE nombre = ?");
+            preparar.setDouble(1, cantidad);
+            preparar.setString(2, nombreProducto);
+            preparar.executeUpdate();
+        } finally {
+            if (preparar != null) {
+                preparar.close();
+            }
+        }
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
