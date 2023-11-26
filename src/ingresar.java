@@ -38,6 +38,7 @@ public class ingresar extends JFrame{
                 validarAdmin();
             }
         });
+        panelIngresar.setBackground(new Color(0, 150, 230));
     }
 
     public void conectar(){

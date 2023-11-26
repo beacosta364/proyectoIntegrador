@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -50,6 +51,7 @@ public class reportes extends JFrame {
 
             }
         });
+        panelReportes.setBackground(new Color(100, 100, 100));
     }
 
     public void conectar() {

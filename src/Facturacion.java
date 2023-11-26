@@ -34,6 +34,7 @@ public class Facturacion extends JFrame{
     private JButton facturarButton;
     private JButton calcularButton;
     private JButton eliminarButton;
+    private JButton consultaClienteButton;
     Connection conexion;
     PreparedStatement preparar;
     Statement traer;
@@ -267,6 +268,17 @@ public class Facturacion extends JFrame{
         });
 
 
+        consultaClienteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                registroClientes usuario1 = new registroClientes();
+                usuario1.setLocationRelativeTo(null);
+                usuario1.setContentPane(new registroClientes().panelClientes);
+                usuario1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                usuario1.setVisible(true);
+                usuario1.pack();
+            }
+        });
     }
     private void calcularTotales() {
         // Calcular el INC (8% del subtotal)
