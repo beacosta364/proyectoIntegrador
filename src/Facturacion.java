@@ -35,6 +35,8 @@ public class Facturacion extends JFrame{
     private JButton calcularButton;
     private JButton eliminarButton;
     private JButton consultaClienteButton;
+    private JButton modificarPropinaButton;
+    private JButton cancelarButton;
     Connection conexion;
     PreparedStatement preparar;
     Statement traer;
@@ -279,6 +281,64 @@ public class Facturacion extends JFrame{
                 usuario1.pack();
             }
         });
+        /*eliminarPropinaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listModel.clear();
+                listModel.removeElement("Propina opcional (10%): $" + (subtotal * 0.10));
+                calcularTotales();
+
+            }
+        });*/
+        modificarPropinaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nuevaPropinaStr = JOptionPane.showInputDialog(null, "Ingrese la nueva propina:", "Modificar Propina", JOptionPane.QUESTION_MESSAGE);
+
+                /*if (nuevaPropinaStr != null && !nuevaPropinaStr.isEmpty()) {
+                    double nuevaPropina = Double.parseDouble(nuevaPropinaStr);
+
+                    // Buscar y reemplazar el elemento relacionado con la propina
+                    for (int i = 0; i < listModel.size(); i++) {
+                        String elemento = listModel.getElementAt(i);
+                        if (elemento.startsWith("Propina opcional (10%): $")) {
+                            listModel.set(i, "Propina opcional. (10%): $" + nuevaPropina);
+                            break;
+                        }
+                    }
+                }*/
+                //String nuevaPropinaStr = JOptionPane.showInputDialog(null, "Ingrese la nueva propina:", "Modificar Propina", JOptionPane.QUESTION_MESSAGE);
+
+                if (nuevaPropinaStr != null && !nuevaPropinaStr.isEmpty()) {
+                    double nuevaPropina = Double.parseDouble(nuevaPropinaStr);
+
+                    // Buscar y reemplazar el elemento relacionado con la propina
+                    for (int i = 0; i < listModel.size(); i++) {
+                        String elemento = listModel.getElementAt(i);
+                        if (elemento.startsWith("Propina opcional (10%): $")) {
+                            listModel.set(i, "Propina opcional. (10%): $" + nuevaPropina);
+                            break;  // Salir del bucle después de encontrar y actualizar la propina
+                        }
+                    }
+
+                    // Calcular nuevos totales con la nueva propina
+                    double propina = nuevaPropina;
+                    double total = subtotal + (subtotal * 0.08) + propina;
+
+                    // Actualizar el elemento del total en el listModel
+                    for (int i = 0; i < listModel.size(); i++) {
+                        String elemento = listModel.getElementAt(i);
+                        if (elemento.startsWith("Total: $")) {
+                            listModel.set(i, "Total: $" + total);
+                            break;  // Salir del bucle después de encontrar y actualizar el total
+                        }
+                    }
+
+                    // Actualizar la visualización en la interfaz
+                    // ...
+                }
+            }
+        });
     }
     private void calcularTotales() {
         // Calcular el INC (8% del subtotal)
@@ -292,7 +352,7 @@ public class Facturacion extends JFrame{
         // Agregar los nuevos elementos al listModel
         listModel.addElement("Subtotal: $" + subtotal);
         listModel.addElement("INC (8%): $" + inc);
-        listModel.addElement("Propina (10%): $" + propina);
+        listModel.addElement("Propina opcional (10%): $" + propina);
         listModel.addElement("----------------------------");
         listModel.addElement("Total: $" + total);
     }
@@ -724,6 +784,7 @@ public class Facturacion extends JFrame{
             }
         }
     }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Facturacion ingresar1 = new Facturacion();

@@ -39,7 +39,7 @@ public class registroClientes extends JFrame {
         }
     }
 
-    private void guardarInformacion() {
+    public void guardarInformacion() {
         conectar();
 
         String nombre = nombreText.getText();
@@ -69,7 +69,7 @@ public class registroClientes extends JFrame {
         }
     }
 
-   private void buscarInformacion() {
+   public void buscarInformacion() {
        conectar();
 
        double contacto;
