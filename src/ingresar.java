@@ -12,6 +12,7 @@ public class ingresar extends JFrame{
     private JButton botonValidarAdmin;
     private JButton botonValidarUser;
     JPanel panelIngresar;
+    private JButton validarCajeroButton;
     Connection conexion;
     PreparedStatement preparar;
     Statement traer;
@@ -39,6 +40,12 @@ public class ingresar extends JFrame{
             }
         });
         panelIngresar.setBackground(new Color(0, 150, 230));
+        validarCajeroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                validarCajero();
+            }
+        });
     }
 
     public void conectar(){
@@ -118,6 +125,34 @@ public class ingresar extends JFrame{
                 ingresar1.setLocationRelativeTo(null);
                 ingresar1.setContentPane(new inicioAdmin().panelAdmin);
                 ingresar1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                ingresar1.setVisible(true);
+                ingresar1.pack();
+
+                JOptionPane.showMessageDialog(null, "Acceso permitido");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error de acceso: admin no registrado");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+
+
+    public void validarCajero() {
+        conectar();
+        String usuario = UsuarioText.getText();
+        String contraseña = String.valueOf(contraText.getPassword());
+
+        try {
+            traer = conexion.createStatement();
+            resultado = traer.executeQuery("SELECT usuario, contraseña FROM cajero WHERE usuario ='" + usuario + "' AND contraseña ='" + contraseña + "'");
+
+            if (resultado.next()) {
+                Facturacion ingresar1 = new Facturacion();
+                ingresar1.setLocationRelativeTo(null);
+                ingresar1.setContentPane(ingresar1.panelFacturacion);
+                ingresar1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                ingresar1.list1.setModel(ingresar1.listModel);
                 ingresar1.setVisible(true);
                 ingresar1.pack();
 

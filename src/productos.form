@@ -47,7 +47,7 @@
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Lista productos"/>
+          <text value="Lista precios y productos"/>
         </properties>
       </component>
       <component id="345b" class="javax.swing.JTextField" binding="descripcionText">
@@ -122,14 +122,6 @@
         </constraints>
         <properties>
           <text value="ID"/>
-        </properties>
-      </component>
-      <component id="aa986" class="javax.swing.JButton" binding="closeButton" default-binding="true">
-        <constraints>
-          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Close"/>
         </properties>
       </component>
     </children>

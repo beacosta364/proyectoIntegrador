@@ -12,6 +12,8 @@ public class login extends JFrame{
     private JButton botonValidarAdmin;
     private JButton botonIngresarAdmin;
     private JButton botoncerrar;
+    private JButton registrarCajeroButton;
+    private JButton validarIngresoCajeroButton;
     Connection conexion;
     PreparedStatement preparar;
     Statement traer;
@@ -61,6 +63,16 @@ public class login extends JFrame{
                 System.exit(0);
             }
         });
+        registrarCajeroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    agregarCajero();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     public void conectar(){
@@ -86,6 +98,19 @@ public class login extends JFrame{
         preparar.setString(1, UsuarioText.getText());
         preparar.setString(2, String.valueOf(contraText.getText()));
         preparar.executeUpdate();
+    }
+    public void agregarCajero() throws SQLException {
+        conectar();
+        preparar = conexion.prepareStatement("Insert into cajero(usuario, contraseña) values (?,?) ");
+        preparar.setString(1, UsuarioText.getText());
+        preparar.setString(2, String.valueOf(contraText.getText()));
+        preparar.executeUpdate();
+        int filasAfectadas = preparar.executeUpdate();
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(null, "Cajero registrado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "No se pudo registrar el cajero", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void validarUsuario() {
@@ -140,13 +165,13 @@ public class login extends JFrame{
         }
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         login login1 = new login();
         login1.setContentPane(new login().panellog);
         login1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         login1.setVisible(true);
         login1.pack();
-    }*/
+    }
 }
 
 

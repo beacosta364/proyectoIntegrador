@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -785,7 +786,7 @@ public class Facturacion extends JFrame{
         }
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Facturacion ingresar1 = new Facturacion();
             ingresar1.setLocationRelativeTo(null);
@@ -795,5 +796,5 @@ public class Facturacion extends JFrame{
             ingresar1.setVisible(true);
             ingresar1.pack();
         });
-    }
+    }*/
 }

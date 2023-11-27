@@ -9,6 +9,7 @@ public class inicioAdmin extends JFrame{
     private JButton reportesButton;
     JPanel panelAdmin;
     private JButton botonFacturacion;
+    private JButton STOCKVENTAButton;
 
     public inicioAdmin() {
         STOCKButton.addActionListener(new ActionListener() {
@@ -63,8 +64,19 @@ public class inicioAdmin extends JFrame{
                 reporte.pack();
             }
         });
+        STOCKVENTAButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stockProductosVenta ingresar1 = new stockProductosVenta();
+                ingresar1.setLocationRelativeTo(null);
+                ingresar1.setContentPane(new stockProductosVenta().panelStockPV);
+                ingresar1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                ingresar1.setVisible(true);
+                ingresar1.pack();
+            }
+        });
     }
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         inicioAdmin ingresar1 = new inicioAdmin();
         ingresar1.setLocationRelativeTo(null);
         ingresar1.setContentPane(new inicioAdmin().panelAdmin);
@@ -72,5 +84,5 @@ public class inicioAdmin extends JFrame{
         ingresar1.setVisible(true);
         ingresar1.pack();
 
-    }*/
+    }
 }
