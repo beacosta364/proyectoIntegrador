@@ -85,22 +85,7 @@ public class Usuarios extends JFrame{
         }
 
     }
-    /*public void consultar() throws SQLException {
-        conectar();
-        //lista.setModel(modelo);
-        tablaDatos.setModel(modeloTabla);
-        traer = conexion.createStatement();
-        resultado = traer.executeQuery("select id, nombre_producto, cantidad from stock");
-        //modelo.removeAllElements();
-        while (resultado.next()){
-            //modelo.addElement(resultado.getString(1)+" || "+resultado.getString(2)+" || "+resultado.getString(3));
-            registros[0]=resultado.getString("id");
-            registros[1]=resultado.getString("nombre_producto");
-            registros[2]=resultado.getString("cantidad");
-            modeloTabla.addRow(registros);
 
-        }
-    }*/
     public void consultar() throws SQLException {
         conectar();
 
@@ -177,23 +162,6 @@ public class Usuarios extends JFrame{
         }
     }
 
-   /* public void update() throws SQLException {
-        conectar();
-        update = conexion.prepareStatement("update stock set stock.nombre_producto ='?', stock.cantidad = ? where stock.id=?; ");
-        update.setInt(1,Integer.parseInt(idText.getText()));
-        update.setString(1, nombreText.getText());
-        //preparar.setString(2, rolText.getText());
-        update.setInt(2,Integer.parseInt(cantidadText.getText()));
-        if (update.executeUpdate()>0){
-            lista.setModel(modelo);
-            modelo.removeAllElements();
-            modelo.addElement("ingreso de campo exitoso");
-            idText.setText("");
-            nombreText.setText("");
-            cantidadText.setText("");
-
-        }
-    }*/
 
 
     public void ingresar() throws SQLException {
